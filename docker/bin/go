@@ -1,0 +1,4 @@
+#!/bin/bash
+
+declare DIR=$(cd "$(dirname "$0")" && pwd)
+sudo docker-compose -f $DIR/../docker-compose.yml run --rm goapp go $*

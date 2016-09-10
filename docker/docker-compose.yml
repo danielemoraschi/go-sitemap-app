@@ -1,0 +1,12 @@
+version: '2'
+services:
+
+    goapp:
+      build: ./containers/go
+      image: goapp
+      working_dir: /go/src/app
+      privileged: true
+      environment:
+        - GOPATH=/go/src/app
+      volumes:
+        - ../:/go/src/app
