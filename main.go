@@ -28,7 +28,7 @@ func removeDuplicatesUnordered(elements []http.HttpResource) []http.HttpResource
 
 func main() {
 
-	concurrency := 5
+	concurrency := 10
 	sem := make(chan bool, concurrency)
 
     var wg sync.WaitGroup
@@ -50,7 +50,7 @@ func main() {
 
     wg.Add(1)
 	sem <- true
-	go crawler.Crawl(sem, &urlList, &wg, urlToVisit, 1, fetcher.HttpFetcher{}, parser.HttpParser{}, policies)
+	go crawler.Crawl(sem, &urlList, &wg, urlToVisit, 2, fetcher.HttpFetcher{}, parser.HttpParser{}, policies)
 	for i := 0; i < cap(sem); i++ {
 		sem <- true
 	}
