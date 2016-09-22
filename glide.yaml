@@ -1,0 +1,9 @@
+package: .
+import:
+- package: github.com/danielemoraschi/go-sitemap-common
+  version: develop
+  subpackages:
+  - http
+  - http/fetcher
+  - parser
+  - policy

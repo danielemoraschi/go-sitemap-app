@@ -1,0 +1,11 @@
+hash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+updated: 2016-09-22T11:58:52.983331673+01:00
+imports:
+- name: github.com/danielemoraschi/go-sitemap-common
+  version: a25c8c0a45c1504b1141d552df20d1dfdc9586de
+  subpackages:
+  - http
+  - http/fetcher
+  - parser
+  - policy
+devImports: []
