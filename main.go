@@ -28,6 +28,9 @@ func removeDuplicatesUnordered(elements []http.HttpResource) []http.HttpResource
 
 func main() {
 
+	concurrency := 5
+	sem := make(chan bool, concurrency)
+
     var wg sync.WaitGroup
 	urlToVisit := "http://golang.org/"
 
@@ -42,16 +45,19 @@ func main() {
 	policies = append(policies, uniqueVisitPolicy)
 	policies = append(policies, sameDomainPolicy)
 
-	var urlList []http.HttpResource
-    urlList = append(urlList, res)
+	var urlList crawler.Urls
+    urlList.Add(res)
 
     wg.Add(1)
-	go crawler.Crawl(&urlList, &wg, urlToVisit, 1, fetcher.HttpFetcher{}, parser.HttpParser{}, policies)
-
+	sem <- true
+	go crawler.Crawl(sem, &urlList, &wg, urlToVisit, 1, fetcher.HttpFetcher{}, parser.HttpParser{}, policies)
+	for i := 0; i < cap(sem); i++ {
+		sem <- true
+	}
 	wg.Wait()
 
-	urlList = removeDuplicatesUnordered(urlList)
+	urlList.RemoveDuplicatesUnordered()
 
-    fmt.Printf("TOT: %d\n", len(urlList))
-	fmt.Printf("ALL: %s\n", urlList)
+    fmt.Printf("TOT: %d\n", urlList.Count())
+	//fmt.Printf("ALL: %s\n", urlList)
 }
