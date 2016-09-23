@@ -10,40 +10,26 @@ import (
     "github.com/danielemoraschi/go-sitemap-common/parser"
 )
 
-func removeDuplicatesUnordered(elements []http.HttpResource) []http.HttpResource {
-	encountered := map[string]http.HttpResource{}
-
-	// Create a map of all unique elements.
-	for v, el := range elements {
-		encountered[elements[v].String()] = el
-	}
-
-	// Place all keys from the map into a slice.
-	result := []http.HttpResource{}
-	for _, el := range encountered {
-		result = append(result, el)
-	}
-	return result
-}
 
 func main() {
-
 	concurrency := 10
 	sem := make(chan bool, concurrency)
 
     var wg sync.WaitGroup
-	urlToVisit := "http://golang.org/"
+	urlToVisit := "http://golang.org"
 
     res, _ := http.HttpResourceFactory(urlToVisit, "")
 
-    fmt.Printf("Content: %s\n", string(res.Content()))
+    //fmt.Printf("Content: %s\n", string(res.Content()))
 
 	uniqueVisitPolicy := policy.UniqueUrlPolicyFactory()
 	sameDomainPolicy := policy.SameDomainPolicyFactory(urlToVisit)
+	validExtensionPolicy := policy.ValidExtensionPolicyFactory()
 
 	var policies []policy.PolicyInterface
 	policies = append(policies, uniqueVisitPolicy)
 	policies = append(policies, sameDomainPolicy)
+	policies = append(policies, validExtensionPolicy)
 
 	var urlList crawler.Urls
     urlList.Add(res)
