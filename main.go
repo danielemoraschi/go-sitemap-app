@@ -8,15 +8,17 @@ import (
     "github.com/danielemoraschi/go-sitemap-common/policy"
     "github.com/danielemoraschi/go-sitemap-common/http"
     "github.com/danielemoraschi/go-sitemap-common/parser"
+	"github.com/danielemoraschi/go-sitemap-common/sitemap/template"
 )
 
 
 func main() {
-	concurrency := 10
+	concurrency := 100
 	sem := make(chan bool, concurrency)
 
     var wg sync.WaitGroup
-	urlToVisit := "http://golang.org"
+	//urlToVisit := "https://golang.org"
+	urlToVisit := "http://asaquattrocento.com"
 
     res, _ := http.HttpResourceFactory(urlToVisit, "")
 
@@ -31,7 +33,7 @@ func main() {
 	policies = append(policies, sameDomainPolicy)
 	policies = append(policies, validExtensionPolicy)
 
-	var urlList crawler.Urls
+	var urlList crawler.UrlCollection
     urlList.Add(res)
 
     wg.Add(1)
@@ -44,6 +46,10 @@ func main() {
 
 	urlList.RemoveDuplicatesUnordered()
 
+	tpl := template.UrlSetFactory()
+	xml, _ := tpl.Set(urlList.Data()).Generate()
+
     fmt.Printf("TOT: %d\n", urlList.Count())
+	fmt.Printf("XML: %v\n", string(xml))
 	//fmt.Printf("ALL: %s\n", urlList)
 }
