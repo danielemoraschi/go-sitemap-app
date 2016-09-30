@@ -46,10 +46,12 @@ func main() {
 
 	urlList.RemoveDuplicatesUnordered()
 
-	tpl := template.UrlSetFactory()
-	xml, _ := tpl.Set(urlList.Data()).Generate()
+	//tpl := template.XMLUrlSetFactory()
+	tpl := template.JsonUrlSetFactory()
+
+	out, _ := tpl.Set(urlList.Data()).Generate()
 
     fmt.Printf("TOT: %d\n", urlList.Count())
-	fmt.Printf("XML: %v\n", string(xml))
+	fmt.Printf("RESULT: %v\n", string(out))
 	//fmt.Printf("ALL: %s\n", urlList)
 }
