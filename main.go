@@ -9,6 +9,8 @@ import (
     "github.com/danielemoraschi/go-sitemap-common/http"
     "github.com/danielemoraschi/go-sitemap-common/parser"
 	"github.com/danielemoraschi/go-sitemap-common/sitemap/template"
+	"github.com/danielemoraschi/go-sitemap-common/output"
+	"sort"
 )
 
 
@@ -18,7 +20,7 @@ func main() {
 
     var wg sync.WaitGroup
 	//urlToVisit := "https://golang.org"
-	urlToVisit := "http://asaquattrocento.com"
+	urlToVisit := "http://google.com"
 
     res, _ := http.HttpResourceFactory(urlToVisit, "")
 
@@ -46,12 +48,16 @@ func main() {
 
 	urlList.RemoveDuplicatesUnordered()
 
-	//tpl := template.XMLUrlSetFactory()
-	tpl := template.JsonUrlSetFactory()
+	tpl := template.XMLUrlSetFactory()
+	//tpl := template.JsonUrlSetFactory()
 
 	out, _ := tpl.Set(urlList.Data()).Generate()
-
+	sort.Float64s()
     fmt.Printf("TOT: %d\n", urlList.Count())
-	fmt.Printf("RESULT: %v\n", string(out))
+	//fmt.Printf("RESULT: %v\n", string(out))
+
+	//outw := output.FileWriterFactory("./sitemap.xml")
+	outw := output.StOutWriterFactory()
+	outw.Write(out)
 	//fmt.Printf("ALL: %s\n", urlList)
 }
